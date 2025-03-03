@@ -193,11 +193,131 @@
                 var domain = $(this).prop('id');
                 enable_dns_sec($SCRIPT_ROOT + '/domain/' + encodeURIComponent(domain) + '/dnssec/disable', '{{ csrf_token() }}');
             });
+
         {% endif %}
+        
+	// start fix svdleer //
+        $(document).ready(function() {
+            // Handle the "Delete" button click
+            $(document.body).on("click", ".button_delete", function(e) {
+                // Prevent form submission or link navigation
+                e.preventDefault();
+
+                // Get the domain name from the data attribute
+                const domain_name = $(this).data("domain");
+
+                // Set the text in the popup
+                $("#delete_message").text(
+                    "Are you sure you want to delete the zone " + domain_name + "?"
+                );
+
+                // Clear old click handlers on the confirm button, then add a fresh one
+                $("#button_delete_confirm")
+                    .off("click") // remove any previous handlers
+                    .on("click", function() {
+                        // POST your data with jQuery
+                        $.post($SCRIPT_ROOT + '/domain/remove', {
+                            _csrf_token: "{{ csrf_token() }}",
+                            domainid: domain_name
+                        })
+                        .done(function(resp) {
+                            // Show success modal
+                            $("#modal_delete_success").modal("show");
+                        })
+                        .fail(function(err) {
+                            // Show failure modal
+                            $("#modal_delete_fail").modal("show");
+                            $("#fail_message").text("Something went wrong: " + JSON.stringify(err));
+                        });
+
+                        // Hide the delete confirmation modal
+                        $("#modal_delete").modal("hide");
+                    });
+
+                // Finally, show the delete confirmation modal
+                $("#modal_delete").modal("show");
+            });
+        });
+        // end fix svdleer //
     </script>
 {% endblock %}
 
 {% block modals %}
+
+        <!-- Start of svdleer fix -->
+        <!-- Delete Confirmation Modal -->
+        <div class="modal fade modal-warning" id="modal_delete">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Zone Removal Confirmation</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="delete_message"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" title="Cancel" class="btn btn-secondary" id="button_delete_cancel"
+                                data-dismiss="modal">
+                            <i class="fa-solid fa-window-close"></i>&nbsp;Cancel
+                        </button>
+                        <button type="button" title="Remove Zone" class="btn btn-danger float-right"
+                                id="button_delete_confirm">
+                            <i class="fa-solid fa-trash-alt"></i>&nbsp;Remove Zone
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Modal -->
+        <div class="modal fade modal-success" id="modal_delete_success">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Success</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>The zone has been successfully deleted.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary float-right" data-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Failure Modal -->
+        <div class="modal fade modal-danger" id="modal_delete_fail">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Failure</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="fail_message"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary float-right" data-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of svdleer fix -->
+
+
     <div class="modal fade" id="modal_history_info">
         <div class="modal-dialog">
             <div class="modal-content">

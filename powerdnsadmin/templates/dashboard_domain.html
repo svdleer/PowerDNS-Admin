@@ -35,7 +35,6 @@
         None
     {% endif %}
 {% endmacro %}
-
 {% macro actions(domain) %}
     <td>
         <div class="dropdown">
@@ -65,14 +64,14 @@
                         <i class="fa-solid fa-history" aria-hidden="true"></i>&nbsp;Zone Changelog
                     </button>
                 {% endif %}
-
+	        {# start fix svdleer #}
                 {% if current_user.role.name in ['Administrator', 'Operator'] or allow_user_remove_domain %}
                     <div class="dropdown-divider"></div>
-                    <button type="button" class="dropdown-item btn-secondary button_delete"
-                            onclick="window.location.href='{{ url_for('domain.remove') }}'">
-                        <span style="color: red;"><i class="fa-solid fa-trash"></i>&nbsp;Remove Zone</span>
-                    </button>
+			<button class="dropdown-item btn-danger button_delete" type="button" data-domain="{{ domain.name }}">
+                            <i class="fa-solid fa-trash"></i>&nbsp;Delete Zone
+                    	</button>
                 {% endif %}
+	        {# end fix svdleer #}
             </div>
         </div>
     </td>
