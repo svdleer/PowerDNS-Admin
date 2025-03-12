@@ -64,14 +64,14 @@
                         <i class="fa-solid fa-history" aria-hidden="true"></i>&nbsp;Zone Changelog
                     </button>
                 {% endif %}
-	        {# start fix svdleer #}
+
                 {% if current_user.role.name in ['Administrator', 'Operator'] or allow_user_remove_domain %}
                     <div class="dropdown-divider"></div>
-			<button class="dropdown-item btn-danger button_delete" type="button" data-domain="{{ domain.name }}">
+			            <button class="dropdown-item btn-danger button_delete" type="button" data-domain="{{ domain.name }}">
                             <i class="fa-solid fa-trash"></i>&nbsp;Delete Zone
-                    	</button>
+                        </button>
                 {% endif %}
-	        {# end fix svdleer #}
+
             </div>
         </div>
     </td>

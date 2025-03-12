@@ -196,7 +196,7 @@
 
         {% endif %}
         
-	// start fix svdleer //
+
         $(document).ready(function() {
             // Handle the "Delete" button click
             $(document.body).on("click", ".button_delete", function(e) {
@@ -238,13 +238,11 @@
                 $("#modal_delete").modal("show");
             });
         });
-        // end fix svdleer //
     </script>
 {% endblock %}
 
 {% block modals %}
 
-        <!-- Start of svdleer fix -->
         <!-- Delete Confirmation Modal -->
         <div class="modal fade modal-warning" id="modal_delete">
             <div class="modal-dialog">
@@ -315,8 +313,6 @@
                 </div>
             </div>
         </div>
-        <!-- End of svdleer fix -->
-
 
     <div class="modal fade" id="modal_history_info">
         <div class="modal-dialog">
